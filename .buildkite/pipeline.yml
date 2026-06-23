@@ -4,7 +4,6 @@ steps:
     command: "make build"
     agents:
       queue: "mixpix3ls-macbook-air"
-      type: "inline"
       shell: "bash" # default: "/bin/bash -e -c"
       plugins:
         - docker#v5.13.0:
