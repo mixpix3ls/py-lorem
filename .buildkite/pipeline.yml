@@ -19,3 +19,9 @@ steps:
   - label: "Generate paragraph with max 100 characters"
     depends_on: "sentence_generation"
     command: buildkite-agent annotate < "python -c 'import loremipsum; print(loremipsum.paragraph(max_char=100))'"
+    agents:
+      queue: "mixpix3ls-macbook-air"
+    plugins:
+      - docker#v5.13.0:
+          image: "python:3.13"
+          always-pull: true
