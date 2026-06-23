@@ -14,7 +14,7 @@ steps:
 
   - label: "Annotate using sentence"
     depends_on: "sentence_generation"
-    command: "cat /tmp/result.txt | buildkite-agent annotate"
+    command: "cat /tmp/result.txt | buildkite-agent annotate --context=sentence"
     agents:
       queue: "mixpix3ls-macbook-air"
 
@@ -33,6 +33,6 @@ steps:
 
   - label: "Annotate using paragraph"
     depends_on: "paragraph_generation"
-    command: "cat tmp/result1.txt | buildkite-agent annotate"
+    command: "cat tmp/result1.txt | buildkite-agent annotate --context=paragraph"
     agents:
       queue: "mixpix3ls-macbook-air"
