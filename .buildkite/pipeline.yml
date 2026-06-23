@@ -1,12 +1,15 @@
 ---
 steps:
-  - label: "Sentence with max 20 characters"
-    commands:
-      - python -c 'import loremipsum; print(loremipsum.sentence(max_char=20))' > result.txt && printf '%b\n' "$(cat result.txt)" | buildkite-agent annotate
+  - label: "Generate sentence with max 20 characters"
+    command: "python -c 'import loremipsum; print(loremipsum.sentence(max_char=20))' > result.txt"
     agents:
       queue: "mixpix3ls-macbook-air"
     plugins:
       - docker#v5.13.0:
           image: "python:3.13"
           always-pull: true
-          mount-buildkite-agent: true
+
+  - label: "Annotate the sentence"
+    command: "printf '%b\n' \"$(cat $BUILDKITE_BUILD_CHECKOUT_PATH/result.txt)\" | buildkite-agent annotate"
+    agents:
+      queue: "mixpix3ls-macbook-air"
