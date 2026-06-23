@@ -2,7 +2,7 @@
 steps:
   - label: "Sentence with max 20 characters"
     commands:
-      - python -c 'import loremipsum; print(loremipsum.sentence(max_char=20))' > result.txt
+      - python -c 'import loremipsum; print(loremipsum.sentence(max_char=20))' > result.txt;
       - printf '%b\n' "$(result.txt)" | buildkite-agent annotate
     agents:
       queue: "mixpix3ls-macbook-air"
