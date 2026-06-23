@@ -1,7 +1,8 @@
 ---
 steps:
   - label: "Generate sentence with max 20 characters"
-    command: "python -c 'import loremipsum; print(loremipsum.sentence(max_char=20))' > result.txt"
+    key: "generate"
+    command: "pip install py-lorem -q && python -c 'import loremipsum; print(loremipsum.sentence(max_char=20))' > result.txt"
     agents:
       queue: "mixpix3ls-macbook-air"
     plugins:
@@ -10,6 +11,7 @@ steps:
           always-pull: true
 
   - label: "Annotate the sentence"
-    command: "printf '%b\n' \"$(cat $BUILDKITE_BUILD_CHECKOUT_PATH/result.txt)\" | buildkite-agent annotate"
+    depends_on: "generate"
+    command: "$BUILDKITE_BUILD_CHECKOUT_PATH/result.txt | buildkite-agent annotate"
     agents:
       queue: "mixpix3ls-macbook-air"
