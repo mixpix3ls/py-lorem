@@ -1,7 +1,6 @@
 ---
 steps:
   - label: "Sentence with max 20 characters"
-    command: "make build"
     agents:
       queue: "mixpix3ls-macbook-air"
     plugins:
