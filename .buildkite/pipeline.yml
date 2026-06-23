@@ -16,19 +16,19 @@ steps:
     agents:
       queue: "mixpix3ls-macbook-air"
 
-  - label: "Generate paragraph with max 100 characters"
-    key: "paragraph_generation"
-    depends_on: "sentence_generation"
-    command: "python -c 'import loremipsum; print(loremipsum.paragraph(max_char=100))' > result2.txt"
-    agents:
-      queue: "mixpix3ls-macbook-air"
-    plugins:
-      - docker#v5.13.0:
-          image: "python:3.13"
-          always-pull: true
+  # - label: "Generate paragraph with max 100 characters"
+  #   key: "paragraph_generation"
+  #   depends_on: "sentence_generation"
+  #   command: "python -c 'import loremipsum; print(loremipsum.paragraph(max_char=100))' > result2.txt"
+  #   agents:
+  #     queue: "mixpix3ls-macbook-air"
+  #   plugins:
+  #     - docker#v5.13.0:
+  #         image: "python:3.13"
+  #         always-pull: true
 
-  - label: "Annotate using paragraph file contents"
-    depends_on: "paragraph_generation"
-    command: "cat result2.txt | buildkite-agent annotate --scope=job"
-    agents:
-      queue: "mixpix3ls-macbook-air"
+  # - label: "Annotate using paragraph file contents"
+  #   depends_on: "paragraph_generation"
+  #   command: "cat result2.txt | buildkite-agent annotate --scope=job"
+  #   agents:
+  #     queue: "mixpix3ls-macbook-air"
