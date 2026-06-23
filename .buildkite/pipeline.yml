@@ -2,7 +2,7 @@
 steps:
   - label: "Generate sentence with max 20 characters and dump into file."
     key: "sentence_generation"
-    command: "pip install py-lorem -q && python -c 'import loremipsum; print(loremipsum.sentence(max_char=20))' > result.txt"
+    command: "pip install py-lorem -q --root-user-action=ignore && python -c 'import loremipsum; print(loremipsum.sentence(max_char=20))' > result.txt"
     agents:
       queue: "mixpix3ls-macbook-air"
     plugins:
@@ -19,7 +19,7 @@ steps:
   - label: "Generate paragraph with max 100 characters"
     key: "paragraph_generation"
     depends_on: "sentence_generation"
-    command: "pip install py-lorem -q && python -c 'import loremipsum; print(loremipsum.paragraph(max_char=100))'"
+    command: "pip install py-lorem -q --root-user-action=ignore && python -c 'import loremipsum; print(loremipsum.paragraph(max_char=100))' > results.txt"
     agents:
       queue: "mixpix3ls-macbook-air"
     plugins:
@@ -27,8 +27,8 @@ steps:
           image: "python:3.13"
           always-pull: true
 
-  # - label: "Annotate using paragraph file contents"
-  #   depends_on: "paragraph_generation"
-  #   command: "cat result1.txt | buildkite-agent annotate --scope=job"
-  #   agents:
-  #     queue: "mixpix3ls-macbook-air"
+  - label: "Annotate using paragraph file contents"
+    depends_on: "paragraph_generation"
+    command: "cat results.txt | buildkite-agent annotate --scope=job"
+    agents:
+      queue: "mixpix3ls-macbook-air"
