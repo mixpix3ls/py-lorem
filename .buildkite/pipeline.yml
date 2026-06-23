@@ -2,7 +2,7 @@
 steps:
   - label: "Generate sentence with max 20 characters"
     key: "generate"
-    command: "pip install py-lorem -q && python -c 'import loremipsum; print(loremipsum.sentence(max_char=20))' > result.txt"
+    command: "python -c 'import loremipsum; print(loremipsum.sentence(max_char=20))' > $BUILDKITE_BUILD_CHECKOUT_PATH/result.txt"
     agents:
       queue: "mixpix3ls-macbook-air"
     plugins:
