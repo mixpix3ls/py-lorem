@@ -4,11 +4,10 @@ steps:
     command: "make build"
     agents:
       queue: "mixpix3ls-macbook-air"
-      shell: "bash" # default: "/bin/bash -e -c"
-      plugins:
-        - docker#v5.13.0:
-            image: "python:3.13"
-            always-pull: true
-            commands:
-              - python -c 'import loremipsum; print(loremipsum.sentence(max_char=20))' > result.txt
-              - printf '%b\n' "$(result.txt)" | buildkite-agent annotate
+    plugins:
+      - docker#v5.13.0:
+          image: "python:3.13"
+          always-pull: true
+          commands:
+            - python -c 'import loremipsum; print(loremipsum.sentence(max_char=20))' > result.txt
+            - printf '%b\n' "$(result.txt)" | buildkite-agent annotate
