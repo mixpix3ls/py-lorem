@@ -1,34 +1,38 @@
 ---
 steps:
-  - label: "Generate sentence with max 20 characters and dump into file."
+  - label: "Generate sentence with max 20 characters"
     key: "sentence_generation"
-    command: "pip install py-lorem -q --root-user-action=ignore && python -c 'import loremipsum; print(loremipsum.sentence(max_char=20))' > result.txt"
+    command: "pip install py-lorem -q --root-user-action=ignore && python -c 'import loremipsum; print(loremipsum.sentence(max_char=20))' > /tmp/result.txt"
     agents:
       queue: "mixpix3ls-macbook-air"
     plugins:
       - docker#v5.13.0:
           image: "python:3.13"
           always-pull: true
+          volumes:
+            - "/tmp:/tmp"
 
-  - label: "Annotate using sentence file contents"
+  - label: "Annotate using sentence"
     depends_on: "sentence_generation"
-    command: "cat result.txt | buildkite-agent annotate --scope=job"
+    command: "buildkite-agent annotate < /tmp/result.txt"
     agents:
       queue: "mixpix3ls-macbook-air"
 
-  # - label: "Generate paragraph with max 100 characters"
-  #   key: "paragraph_generation"
-  #   depends_on: "sentence_generation"
-  #   command: "pip install py-lorem -q --root-user-action=ignore && python -c 'import loremipsum; print(loremipsum.paragraph(max_char=100))' > results.txt"
-  #   agents:
-  #     queue: "mixpix3ls-macbook-air"
-  #   plugins:
-  #     - docker#v5.13.0:
-  #         image: "python:3.13"
-  #         always-pull: true
+  - label: "Generate paragraph with max 100 characters"
+    key: "paragraph_generation"
+    depends_on: "sentence_generation"
+    command: "pip install py-lorem -q --root-user-action=ignore && python -c 'import loremipsum; print(loremipsum.paragraph(max_char=100))' > /tmp/result1.txt"
+    agents:
+      queue: "mixpix3ls-macbook-air"
+    plugins:
+      - docker#v5.13.0:
+          image: "python:3.13"
+          always-pull: true
+          volumes:
+            - "/tmp:/tmp"
 
-  # - label: "Annotate using paragraph file contents"
-  #   depends_on: "paragraph_generation"
-  #   command: "ls -la"
-  #   agents:
-  #     queue: "mixpix3ls-macbook-air"
+  - label: "Annotate using paragraph"
+    depends_on: "paragraph_generation"
+    command: "buildkite-agent annotate < /tmp/result1.txt"
+    agents:
+      queue: "mixpix3ls-macbook-air"
