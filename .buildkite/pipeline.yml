@@ -1,5 +1,55 @@
 ---
 steps:
+  - label: "Generate sentence with max 20 characters"
+    key: "sentence_generation"
+    command: "python -c 'import loremipsum; print(loremipsum.sentence(max_char=20))' > /tmp/result.txt"
+    agents:
+      queue: "mixpix3ls-macbook-air"
+    plugins:
+      - docker#v5.13.0:
+          image: "python:3.13"
+          always-pull: true
+          volumes:
+            - "/tmp:/tmp"
+
+  - label: "Annotate using sentence"
+    depends_on: "sentence_generation"
+    command: "cat /tmp/result.txt | buildkite-agent annotate --context=sentence"
+    agents:
+      queue: "mixpix3ls-macbook-air"
+
+  - label: "Generate paragraph with max 100 characters"
+    key: "paragraph_generation"
+    depends_on: "sentence_generation"
+    command: "python -c 'import loremipsum; print(loremipsum.paragraph(max_char=100))' > /tmp/result2.txt"
+    agents:
+      queue: "mixpix3ls-macbook-air"
+    plugins:
+      - docker#v5.13.0:
+          image: "python:3.13"
+          always-pull: true
+          volumes:
+            - "/tmp:/tmp"
+
+  # - label: "Annotate using paragraph"
+  #   depends_on: "paragraph_generation"
+  #   command: "cat /tmp/result2.txt | buildkite-agent annotate --context=paragraph"
+  #   agents:
+  #     queue: "mixpix3ls-macbook-air"
+
+  - label: "Upload result2.txt to Buildkite artifact store"
+    key: "upload_artifact"
+    depends_on: "paragraph_generation"
+    command: "cd /tmp && buildkite-agent artifact upload result2.txt"
+    agents:
+      queue: "mixpix3ls-macbook-air"
+
+  - label: "Download result2.txt artifact store and annotate its content"
+    depends_on: "upload_artifact"
+    command: "buildkite-agent artifact download result2.txt . && buildkite-agent annotate --context=artifact-download-annotate < result2.txt"
+    agents:
+      queue: "mixpix3ls-macbook-air"
+
   - label: ":docker: Build and Push"
     agents:
       queue: "linux-small"
@@ -13,53 +63,3 @@ steps:
             org-slug: mixpix3ls
             registry-slug: mixpix3ls-registry
             auth-method: oidc
-
-#   - label: "Generate sentence with max 20 characters"
-#     key: "sentence_generation"
-#     command: "python -c 'import loremipsum; print(loremipsum.sentence(max_char=20))' > /tmp/result.txt"
-#     agents:
-#       queue: "mixpix3ls-macbook-air"
-#     plugins:
-#       - docker#v5.13.0:
-#           image: "python:3.13"
-#           always-pull: true
-#           volumes:
-#             - "/tmp:/tmp"
-
-#   - label: "Annotate using sentence"
-#     depends_on: "sentence_generation"
-#     command: "cat /tmp/result.txt | buildkite-agent annotate --context=sentence"
-#     agents:
-#       queue: "mixpix3ls-macbook-air"
-
-#   - label: "Generate paragraph with max 100 characters"
-#     key: "paragraph_generation"
-#     depends_on: "sentence_generation"
-#     command: "python -c 'import loremipsum; print(loremipsum.paragraph(max_char=100))' > /tmp/result2.txt"
-#     agents:
-#       queue: "mixpix3ls-macbook-air"
-#     plugins:
-#       - docker#v5.13.0:
-#           image: "python:3.13"
-#           always-pull: true
-#           volumes:
-#             - "/tmp:/tmp"
-
-#   # - label: "Annotate using paragraph"
-#   #   depends_on: "paragraph_generation"
-#   #   command: "cat /tmp/result2.txt | buildkite-agent annotate --context=paragraph"
-#   #   agents:
-#   #     queue: "mixpix3ls-macbook-air"
-
-#   - label: "Upload result2.txt to Buildkite artifact store"
-#     key: "upload_artifact"
-#     depends_on: "paragraph_generation"
-#     command: "cd /tmp && buildkite-agent artifact upload result2.txt"
-#     agents:
-#       queue: "mixpix3ls-macbook-air"
-
-# - label: "Download result2.txt from Buildkite artifact store and annotate its content"
-#   depends_on: "upload_artifact"
-#   command: "buildkite-agent artifact download result2.txt . && buildkite-agent annotate --context=artifact-download-annotate < result2.txt"
-#   agents:
-#     queue: "mixpix3ls-macbook-air"
