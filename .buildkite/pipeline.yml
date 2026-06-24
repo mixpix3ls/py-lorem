@@ -40,13 +40,13 @@ steps:
   - label: "Upload result2.txt to Buildkite artifact store"
     key: "upload_artifact"
     depends_on: "paragraph_generation"
-    command: buildkite-agent artifact upload tmp/result2.txt
+    command: buildkite-agent artifact upload /tmp/result2.txt
     agents:
       queue: "mixpix3ls-macbook-air"
 
   - label: "Download result2.txt from Buildkite artifact store and annotate its content"
     depends_on: "upload_artifact"
     commands:
-      - buildkite-agent artifact download tmp/result2.txt . && cat tmp/result2.txt | buildkite-agent annotate --context=artifact-download
+      - buildkite-agent artifact download /tmp/result2.txt . && buildkite-agent annotate --context=artifact-download < tmp/result2.txt
     agents:
       queue: "mixpix3ls-macbook-air"
