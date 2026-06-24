@@ -1,17 +1,10 @@
 ---
 steps:
-  - label: ":docker: Build"
+  - label: ":docker: Build and Push"
     agents:
       queue: "linux-small"
-    key: "build_image"
+    key: "build_and_push"
     command: "docker build -t app:latest ."
-
-  - label: ":docker: Push"
-    agents:
-      queue: "linux-small"
-    key: "push_image"
-    depends_on: "build_image"
-    command: "echo 'Pushing image'"
     plugins:
       - docker-image-push#v1.3.0:
           provider: buildkite
