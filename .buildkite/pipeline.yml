@@ -1,13 +1,13 @@
 ---
 steps:
-  - label: "Build Docker Image"
+  - label: "Build container image"
     command: "docker build -t hello-world-app ."
     agents:
-      queue: "mixpix3ls-macbook-air"
+      queue: "linux-small "
 
-  - label: ":docker: Build and Push"
+  - label: "Push container image"
     agents:
-      queue: "mixpix3ls-macbook-air"
+      queue: "linux-small"
     plugins:
       - docker-image-push#v1.3.0:
           provider: buildkite
