@@ -7,7 +7,7 @@ steps:
           image: hello-world-app
           buildkite:
             org-slug: mixpix3ls
-            registry-slug: mixpix3ls-regisry
+            registry-slug: mixpix3ls-registry
             auth-method: oidc
 #   - label: "Generate sentence with max 20 characters"
 #     key: "sentence_generation"
