@@ -1,5 +1,11 @@
 ---
 steps:
+  - label: "Debug Buildkite OIDC context"
+    command: |
+      echo "org=$BUILDKITE_ORGANIZATION_SLUG"
+      echo "pipeline=$BUILDKITE_PIPELINE_SLUG"
+      echo "branch=$BUILDKITE_BRANCH"
+
   - label: ":docker: Build and Push"
     plugins:
       - docker-image-push#v1.3.0:
