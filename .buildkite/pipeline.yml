@@ -6,6 +6,8 @@ steps:
       queue: "mixpix3ls-macbook-air"
 
   - label: ":docker: Build and Push"
+    agents:
+      queue: "mixpix3ls-macbook-air"
     plugins:
       - docker-image-push#v1.3.0:
           provider: buildkite
