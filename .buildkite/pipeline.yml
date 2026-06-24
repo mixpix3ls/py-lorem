@@ -21,7 +21,7 @@ steps:
   - label: "Generate paragraph with max 100 characters"
     key: "paragraph_generation"
     depends_on: "sentence_generation"
-    command: "python -c 'import loremipsum; print(loremipsum.paragraph(max_char=100))' > /tmp/result1.txt"
+    command: "python -c 'import loremipsum; print(loremipsum.paragraph(max_char=100))' > /tmp/result2.txt"
     agents:
       queue: "mixpix3ls-macbook-air"
     plugins:
@@ -31,8 +31,21 @@ steps:
           volumes:
             - "/tmp:/tmp"
 
-  - label: "Annotate using paragraph"
+  # - label: "Annotate using paragraph"
+  #   depends_on: "paragraph_generation"
+  #   command: "cat /tmp/result2.txt | buildkite-agent annotate --context=paragraph"
+  #   agents:
+  #     queue: "mixpix3ls-macbook-air"
+
+  - label: "Upload result2.txt to Buildkite artifact store"
+    key: "upload_artifact"
     depends_on: "paragraph_generation"
-    command: "cat /tmp/result1.txt | buildkite-agent annotate --context=paragraph"
+    command: buildkite-agent artifact upload /tmp/result2.txt
+    agents:
+      queue: "mixpix3ls-macbook-air"
+
+  - label: "Download result2.txt from Buildkite artifact store and annotate its content"
+    depends_on: "upload_artifact"
+    command: buildkite-agent artifact download /tmp/result2.txt /tmp/download.txt | cat /tmp/download.txt | buildkite-agent annotate --context=artifact-download
     agents:
       queue: "mixpix3ls-macbook-air"
