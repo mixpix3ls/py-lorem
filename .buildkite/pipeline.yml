@@ -10,19 +10,19 @@ steps:
           build: app
           config: docker-compose.yml
 
-  # - label: ":docker: Build and Push"
-  #   agents:
-  #     queue: "linux-small"
-  #   key: "push_image"
-  #   depends_on: "build_image"
-  #   plugins:
-  #     - docker-image-push#v1.3.0:
-  #         provider: buildkite
-  #         image: app
-  #         buildkite:
-  #           org-slug: mixpix3ls
-  #           registry-slug: mixpix3ls-registry
-  #           auth-method: oidc
+  - label: ":docker: Push with Plugin"
+    agents:
+      queue: "linux-small"
+    key: "push_image"
+    depends_on: "build_image"
+    plugins:
+      - docker-image-push#v1.3.0:
+          provider: buildkite
+          image: app
+          buildkite:
+            org-slug: mixpix3ls
+            registry-slug: mixpix3ls-registry
+            auth-method: oidc
 
 #   - label: "Generate sentence with max 20 characters"
 #     key: "sentence_generation"
