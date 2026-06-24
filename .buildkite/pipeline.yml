@@ -4,7 +4,7 @@ steps:
     agents:
       queue: "linux-small"
     key: "build_and_push"
-    command: "docker build -t app:latest ."
+    command: "docker build --load -t app:latest ."
     plugins:
       - docker-image-push#v1.3.0:
           provider: buildkite
