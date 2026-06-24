@@ -1,20 +1,17 @@
 ---
 steps:
-  - label: ":docker: Build with Plugin"
+  - label: ":docker: Build"
     agents:
       queue: "linux-small"
     key: "build_image"
-    command: echo "Image built successfully!"
-    plugins:
-      - docker-compose#v5.0.0:
-          build: app
-          config: docker-compose.yml
+    command: "docker build -t app:latest ."
 
-  - label: ":docker: Push with Plugin"
+  - label: ":docker: Push"
     agents:
       queue: "linux-small"
     key: "push_image"
     depends_on: "build_image"
+    command: "echo 'Pushing image'"
     plugins:
       - docker-image-push#v1.3.0:
           provider: buildkite
