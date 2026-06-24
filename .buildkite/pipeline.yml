@@ -44,9 +44,9 @@ steps:
     agents:
       queue: "mixpix3ls-macbook-air"
 
-  - label: "Download result2.txt from Buildkite artifact store and annotate its content"
-    depends_on: "upload_artifact"
-    commands:
-      - buildkite-agent artifact download /tmp/result2.txt . && buildkite-agent annotate --context=artifact-download < tmp/result2.txt
-    agents:
-      queue: "mixpix3ls-macbook-air"
+  # - label: "Download result2.txt from Buildkite artifact store and annotate its content"
+  #   depends_on: "upload_artifact"
+  #   commands:
+  #     - buildkite-agent artifact download /tmp/result2.txt . && buildkite-agent annotate --context=artifact-download < tmp/result2.txt
+  #   agents:
+  #     queue: "mixpix3ls-macbook-air"
