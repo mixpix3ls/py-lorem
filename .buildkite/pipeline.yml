@@ -1,11 +1,15 @@
 ---
 steps:
   - label: "Build container image"
+    key: build_image
     command: "docker build -t hello-world-app ."
     agents:
       queue: "linux-small"
 
   - label: "Push container image"
+    key: push_image
+    depends_on: "build_image"
+    command: "buildkite-agent docker-image push hello-world-app"
     agents:
       queue: "linux-small"
     plugins:
