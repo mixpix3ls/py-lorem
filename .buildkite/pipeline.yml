@@ -3,7 +3,7 @@ steps:
   - label: "Build container image"
     command: "docker build -t hello-world-app ."
     agents:
-      queue: "linux-small "
+      queue: "linux-small"
 
   - label: "Push container image"
     agents:
