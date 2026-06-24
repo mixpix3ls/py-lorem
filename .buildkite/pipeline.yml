@@ -1,10 +1,9 @@
 ---
 steps:
-  - label: "Debug Buildkite OIDC context"
-    command: |
-      echo "org=$BUILDKITE_ORGANIZATION_SLUG"
-      echo "pipeline=$BUILDKITE_PIPELINE_SLUG"
-      echo "branch=$BUILDKITE_BRANCH"
+  - label: "Build Docker Image"
+    command: "docker build -t hello-world-app ."
+    agents:
+      queue: "mixpix3ls-macbook-air"
 
   - label: ":docker: Build and Push"
     plugins:
