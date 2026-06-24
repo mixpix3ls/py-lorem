@@ -1,25 +1,29 @@
 ---
 steps:
-  - label: "Build container image"
-    key: build_image
-    command: "docker build -t hello-world-app ."
+  - label: ":docker: Build with Plugin"
     agents:
       queue: "linux-small"
+    key: "build_image"
+    command: echo "Image built successfully!"
+    plugins:
+      - docker-compose#v5.0.0:
+          build: app
+          config: docker-compose.yml
 
-  - label: "Push container image"
-    key: push_image
-    depends_on: "build_image"
-    command: "buildkite-agent docker-image push hello-world-app"
+  - label: ":docker: Build and Push"
     agents:
       queue: "linux-small"
+    key: "push_image"
+    depends_on: "build_image"
     plugins:
       - docker-image-push#v1.3.0:
           provider: buildkite
-          image: hello-world-app
+          image: app
           buildkite:
             org-slug: mixpix3ls
             registry-slug: mixpix3ls-registry
             auth-method: oidc
+
 #   - label: "Generate sentence with max 20 characters"
 #     key: "sentence_generation"
 #     command: "python -c 'import loremipsum; print(loremipsum.sentence(max_char=20))' > /tmp/result.txt"

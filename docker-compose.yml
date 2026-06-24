@@ -1,4 +1,3 @@
 services:
-  hello-world-app:
+  app:
     build: .
-    image: hello-world-app
